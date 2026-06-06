@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>raidnote</title>
+  <meta name="description" content="レイド用メモ・練習ページ置き場です。個人制作・非公式。">
+  <style>
+    :root{
+      --bg:#0f1117;
+      --panel:#191d28;
+      --text:#eef1f7;
+      --muted:#aab2c5;
+      --line:#343b50;
+      --accent:#f0c36a;
+      --link:#9cc7ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(240,195,106,.11), transparent 28%),
+        radial-gradient(circle at 92% 8%, rgba(156,199,255,.10), transparent 26%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+    header,main,footer{max-width:980px;margin:auto;padding:22px}
+    header{padding-top:42px}
+    .hero{
+      background:rgba(25,29,40,.88);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 18px 60px rgba(0,0,0,.25);
+    }
+    .eyebrow{color:var(--accent);font-weight:800;letter-spacing:.06em}
+    h1{font-size:clamp(32px,6vw,52px);line-height:1.1;margin:8px 0 12px}
+    h2{line-height:1.3}
+    p{color:var(--muted);margin:8px 0}
+    .notice{
+      margin-top:14px;
+      background:rgba(255,207,122,.08);
+      border:1px solid rgba(255,207,122,.35);
+      color:#f5dfb4;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg, rgba(25,29,40,.98), rgba(18,22,32,.98));
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      min-height:220px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .card h2{font-size:20px;margin:0}
+    .tags{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{
+      display:inline-block;
+      color:#d8def0;
+      background:#222838;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:3px 8px;
+      font-size:12px;
+    }
+    .buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    a.button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#111520;
+      background:var(--accent);
+      text-decoration:none;
+      font-weight:900;
+      border-radius:12px;
+      padding:9px 12px;
+      border:1px solid rgba(255,255,255,.15);
+    }
+    a.button.secondary{
+      color:var(--text);
+      background:#252b3a;
+      border-color:var(--line);
+      font-weight:700;
+    }
+    a{color:var(--link)}
+    .section-title{font-size:24px;margin:28px 0 10px}
+    .small{font-size:13px;color:var(--muted)}
+    ul{color:var(--muted);padding-left:1.3em}
+    footer{padding-bottom:36px}
+  </style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="eyebrow">raidnote</div>
+    <h1>レイド用メモ・練習ページ</h1>
+    <p>絶で床をなめながら作っている、個人制作・非公式の練習ページ置き場です。</p>
+    <div class="notice">
+      ※ 非公式の個人制作ページです。ゲーム内画像・音声等は使用していません。<br>
+      ※ 処理法は各固定・募集の採用マクロを優先してください。
+    </div>
+  </div>
+</header>
+
+<main>
+  <h2 class="section-title">公開中</h2>
+  <section class="grid">
+    <article class="card">
+      <h2>P2 ミッシング練習ページ</h2>
+      <p>ヤーン式・KT式（りー様）両対応。ノーマルは選択肢から選ぶだけ、ハードは立ち位置選択で練習できます。</p>
+      <div class="tags">
+        <span class="tag">絶妖星乱舞</span>
+        <span class="tag">P2</span>
+        <span class="tag">ミッシング</span>
+        <span class="tag">ヤーン式</span>
+        <span class="tag">KT式</span>
+      </div>
+      <div class="buttons">
+        <a class="button" href="https://pilsnerdrinker.github.io/practice-missing/" target="_blank" rel="noopener">開く</a>
+        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-missing" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>P1 ずびずばテレポ練習ページ</h2>
+      <p>フィリピン箱式の番号＋矢印暗記用。箱配置を見て、クリックで反復練習できます。</p>
+      <div class="tags">
+        <span class="tag">絶妖星乱舞</span>
+        <span class="tag">P1</span>
+        <span class="tag">ずびずばテレポ</span>
+        <span class="tag">フィリピン箱式</span>
+      </div>
+      <div class="buttons">
+        <a class="button" href="https://pilsnerdrinker.github.io/practice-telepo/" target="_blank" rel="noopener">開く</a>
+        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-telepo" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </article>
+  </section>
+
+  <h2 class="section-title">メモ</h2>
+  <p>個人制作の練習ページです。</p>
+  <p>処理法やマクロが違う場合は、各固定・募集のものを優先してください。</p>
+  <p>判定違いなどに気づいた場合は、Xの該当投稿に返信いただければ、気づいた範囲で確認します。</p>
+
+  <h2 class="section-title">更新メモ</h2>
+  <ul>
+    <li>処理法やマクロの違いに気づいたら、気づいた範囲で修正します。</li>
+    <li>ページを追加したらここに増やします。</li>
+    <li>修正内容は、必要に応じてXの投稿ツリーにも追記します。</li>
+  </ul>
+</main>
+
+<footer>
+  <p class="small">
+    FINAL FANTASY XIV は株式会社スクウェア・エニックスの著作物です。<br>
+    このページおよび掲載ページは個人制作の非公式ファンページです。
+  </p>
+</footer>
+</body>
+</html>
