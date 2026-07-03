@@ -55,6 +55,77 @@
       margin-top:18px;
     }
     @media(max-width:720px){.grid{grid-template-columns:1fr}}
+    .filters{
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .search-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .search-input{
+      width:100%;
+      color:var(--text);
+      background:#151925;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      font:inherit;
+      outline:none;
+    }
+    .search-input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(240,195,106,.16);
+    }
+    .clear-button{
+      flex:0 0 auto;
+      color:var(--text);
+      background:#252b3a;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .filter-tags{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .filter-tag{
+      color:#d8def0;
+      background:#222838;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:5px 9px;
+      font:inherit;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .filter-tag[aria-pressed="true"]{
+      color:#111520;
+      background:var(--accent);
+      border-color:rgba(255,255,255,.15);
+      font-weight:800;
+    }
+    .filter-status{
+      min-height:1.4em;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .empty-result{
+      display:none;
+      color:var(--muted);
+      background:rgba(25,29,40,.78);
+      border:1px dashed var(--line);
+      border-radius:14px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .empty-result.is-visible{display:block}
     .card{
       background:linear-gradient(180deg, rgba(25,29,40,.98), rgba(18,22,32,.98));
       border:1px solid var(--line);
@@ -65,6 +136,7 @@
       flex-direction:column;
       gap:10px;
     }
+    .card[hidden]{display:none}
     .card h2{font-size:20px;margin:0}
     .tags{display:flex;gap:6px;flex-wrap:wrap}
     .tag{
@@ -116,7 +188,32 @@
 
 <main>
   <h2 class="section-title">公開中</h2>
+  <div class="filters" aria-label="ページ検索">
+    <div class="search-row">
+      <input id="pageSearch" class="search-input" type="search" placeholder="タグ・名前で検索" autocomplete="off">
+      <button id="clearSearch" class="clear-button" type="button">クリア</button>
+    </div>
+    <div id="filterTags" class="filter-tags" aria-label="タグ"></div>
+    <div id="filterStatus" class="filter-status" aria-live="polite"></div>
+  </div>
   <section class="grid">
+
+
+    <article class="card">
+      <h2>P5エクサ練習</h2>
+      <p>混沌の終末のエクサを、速度や状況を見ながら反復できる練習ページです。</p>
+      <div class="tags">
+        <span class="tag">絶妖星乱舞</span>
+        <span class="tag">P5</span>
+        <span class="tag">エクサ</span>
+        <span class="tag">混沌の終末</span>
+        <span class="tag">実戦練習</span>
+      </div>
+      <div class="buttons">
+        <a class="button" href="https://pilsnerdrinker.github.io/practice-exa-dancingmad/" target="_blank" rel="noopener">開く</a>
+        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-exa-dancingmad" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </article>
 
 
     <article class="card">
@@ -290,6 +387,7 @@
       </div>
     </article>
   </section>
+  <p id="emptyResult" class="empty-result">該当するページがありません。</p>
 
   <h2 class="section-title">メモ</h2>
   <p>個人制作の練習ページです。</p>
@@ -298,6 +396,8 @@
 
   <h2 class="section-title">更新メモ</h2>
   <ul>
+    <li>タグ・名前で検索できる絞り込み機能を追加しました。</li>
+    <li>P5エクサ練習を追加しました。</li>
     <li>P5フラッド練習を追加しました。</li>
     <li>P4グランドクロス練習を追加しました。</li>
     <li>処理法やマクロの違いに気づいたら、気づいた範囲で修正します。</li>
@@ -316,5 +416,77 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "69e65a6b5ec64e5bb4b6a6c1c07c4667"}'></script>
   <!-- End Cloudflare Web Analytics -->
+  <script>
+    (() => {
+      const searchInput = document.getElementById('pageSearch');
+      const clearButton = document.getElementById('clearSearch');
+      const filterTags = document.getElementById('filterTags');
+      const filterStatus = document.getElementById('filterStatus');
+      const emptyResult = document.getElementById('emptyResult');
+      const cards = Array.from(document.querySelectorAll('.card'));
+      const selectedTags = new Set();
+
+      const normalize = value => value.toLowerCase().replace(/\s+/g, '');
+      const visibleFilterTags = ['絶妖星乱舞', 'P5', 'P4', 'P3', 'P3前半', 'P3後半', 'P2', 'P1', 'エクサ'];
+      const existingTags = new Set(cards.flatMap(card =>
+        Array.from(card.querySelectorAll('.tag'), tag => tag.textContent.trim())
+      ));
+      const allTags = visibleFilterTags.filter(tag => existingTags.has(tag));
+
+      allTags.forEach(tag => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'filter-tag';
+        button.textContent = tag;
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => {
+          if (selectedTags.has(tag)) {
+            selectedTags.delete(tag);
+            button.setAttribute('aria-pressed', 'false');
+          } else {
+            selectedTags.add(tag);
+            button.setAttribute('aria-pressed', 'true');
+          }
+          applyFilter();
+        });
+        filterTags.appendChild(button);
+      });
+
+      const getCardText = card => normalize(card.textContent);
+      const getCardTags = card => new Set(Array.from(card.querySelectorAll('.tag'), tag => tag.textContent.trim()));
+
+      function applyFilter(){
+        const query = normalize(searchInput.value.trim());
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const cardText = getCardText(card);
+          const cardTags = getCardTags(card);
+          const matchesQuery = !query || cardText.includes(query);
+          const matchesTags = [...selectedTags].every(tag => cardTags.has(tag));
+          const isVisible = matchesQuery && matchesTags;
+          card.hidden = !isVisible;
+          if (isVisible) visibleCount += 1;
+        });
+
+        const parts = [];
+        if (query) parts.push(`検索: ${searchInput.value.trim()}`);
+        if (selectedTags.size) parts.push(`タグ: ${[...selectedTags].join(' / ')}`);
+        filterStatus.textContent = parts.length ? `${visibleCount}件表示中（${parts.join('、')}）` : `${cards.length}件表示中`;
+        emptyResult.classList.toggle('is-visible', visibleCount === 0);
+      }
+
+      searchInput.addEventListener('input', applyFilter);
+      clearButton.addEventListener('click', () => {
+        searchInput.value = '';
+        selectedTags.clear();
+        Array.from(filterTags.children, button => button.setAttribute('aria-pressed', 'false'));
+        applyFilter();
+        searchInput.focus();
+      });
+      applyFilter();
+    })();
+  </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "69e65a6b5ec64e5bb4b6a6c1c07c4667"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
