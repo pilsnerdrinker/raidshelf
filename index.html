@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap" rel="stylesheet">
   <title>raidshelf</title>
   <meta name="description" content="レイド用メモ・練習ページ置き場です。個人制作・非公式。">
   <style>
@@ -33,11 +36,26 @@
       background:rgba(25,29,40,.88);
       border:1px solid var(--line);
       border-radius:22px;
-      padding:22px;
+      padding:24px 22px;
       box-shadow:0 18px 60px rgba(0,0,0,.25);
     }
-    .eyebrow{color:var(--accent);font-weight:900;letter-spacing:.04em;font-size:clamp(42px,8vw,70px);line-height:1.02}
-    h1{font-size:clamp(18px,3vw,26px);line-height:1.25;margin:6px 0 10px}
+    /* ヒーローの階層: 小さいラベル → ブランド名 → 説明 */
+    .kicker{
+      color:var(--accent);
+      font-weight:700;
+      letter-spacing:.14em;
+      font-size:12px;
+      margin:0 0 6px;
+    }
+    .wordmark{
+
+      font-family:"Outfit", system-ui, sans-serif;      color:var(--accent);
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-size:clamp(40px,7vw,60px);
+      line-height:1.0;
+    }
+    h1{font-size:clamp(18px,3vw,24px);line-height:1.25;margin:8px 0 10px;font-weight:700}
     h2{line-height:1.3}
     p{color:var(--muted);margin:8px 0}
     .notice{
@@ -49,23 +67,9 @@
       padding:12px 14px;
       font-size:14px;
     }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-      margin-top:18px;
-    }
-    @media(max-width:720px){.grid{grid-template-columns:1fr}}
-    .filters{
-      margin-top:14px;
-      display:grid;
-      gap:10px;
-    }
-    .search-row{
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
+    /* 検索・フィルター */
+    .filters{margin-top:14px;display:grid;gap:10px}
+    .search-row{display:flex;gap:8px;align-items:center}
     .search-input{
       width:100%;
       color:var(--text);
@@ -91,11 +95,7 @@
       font-weight:700;
       cursor:pointer;
     }
-    .filter-tags{
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-    }
+    .filter-tags{display:flex;gap:6px;flex-wrap:wrap}
     .filter-tag{
       color:#d8def0;
       background:#222838;
@@ -112,11 +112,7 @@
       border-color:rgba(255,255,255,.15);
       font-weight:800;
     }
-    .filter-status{
-      min-height:1.4em;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .filter-status{min-height:1.4em;color:var(--muted);font-size:13px}
     .empty-result{
       display:none;
       color:var(--muted);
@@ -127,18 +123,58 @@
       margin-top:14px;
     }
     .empty-result.is-visible{display:block}
+
+    /* 大カテゴリ（絶シリーズ）ごとのセクション */
+    .raid-section{margin-top:22px}
+    .raid-section[hidden]{display:none}
+    .raid-head{
+      display:flex;align-items:baseline;gap:10px;
+      margin:0 0 4px;padding:2px 0 8px 12px;
+      border-left:4px solid var(--accent);
+      border-bottom:1px solid var(--line);
+    }
+    .raid-head .raid-name{
+      color:var(--text);font-weight:800;
+      font-size:clamp(20px,3.4vw,26px);letter-spacing:.01em;
+    }
+    .raid-head .raid-count{color:var(--muted);font-size:13px}
+
+    /* フェーズごとのグループ（大カテゴリの中） */
+    .phase-group{margin-top:18px}
+    .phase-group[hidden]{display:none}
+    .phase-head{
+      display:flex;align-items:baseline;gap:10px;
+      margin:0 0 12px;padding-bottom:6px;
+      border-bottom:1px solid var(--line);
+    }
+    .phase-head .p{
+      color:var(--accent);font-weight:800;font-size:18px;letter-spacing:.02em;
+    }
+    .phase-head .phase-count{color:var(--muted);font-size:13px}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+
     .card{
       background:linear-gradient(180deg, rgba(25,29,40,.98), rgba(18,22,32,.98));
       border:1px solid var(--line);
       border-radius:18px;
       padding:18px;
-      min-height:220px;
       display:flex;
       flex-direction:column;
       gap:10px;
     }
     .card[hidden]{display:none}
-    .card h2{font-size:20px;margin:0}
+    .card h2{font-size:20px;margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+    .badge-new{
+      color:#111520;background:var(--accent);
+      font-size:11px;font-weight:800;letter-spacing:.05em;
+      border-radius:6px;padding:1px 6px;
+    }
     .tags{display:flex;gap:6px;flex-wrap:wrap}
     .tag{
       display:inline-block;
@@ -150,35 +186,53 @@
       font-size:12px;
     }
     .buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    /* 主ボタン: 普段は輪郭、ホバー/フォーカスで金に点灯 */
     a.button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      color:#111520;
-      background:var(--accent);
+      color:var(--accent);
+      background:transparent;
       text-decoration:none;
-      font-weight:900;
+      font-weight:800;
       border-radius:12px;
       padding:9px 12px;
-      border:1px solid rgba(255,255,255,.15);
+      border:1px solid rgba(240,195,106,.55);
+      transition:background .12s,color .12s,border-color .12s;
+    }
+    a.button:hover,a.button:focus-visible{
+      color:#111520;background:var(--accent);border-color:rgba(255,255,255,.15);
     }
     a.button.secondary{
-      color:var(--text);
-      background:#252b3a;
-      border-color:var(--line);
-      font-weight:700;
+      color:var(--text);background:transparent;border-color:var(--line);font-weight:700;
+    }
+    a.button.secondary:hover,a.button.secondary:focus-visible{
+      color:var(--text);background:#252b3a;border-color:var(--line);
     }
     a{color:var(--link)}
     .section-title{font-size:24px;margin:16px 0 10px}
+    .status-label{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.1em;margin:18px 0 12px}
     .small{font-size:13px;color:var(--muted)}
     ul{color:var(--muted);padding-left:1.3em}
     footer{padding-bottom:36px}
+
+    /* キーボード操作時のフォーカス表示 */
+    .filter-tag:focus-visible,
+    .clear-button:focus-visible,
+    a.button:focus-visible{
+      outline:2px solid var(--accent);
+      outline-offset:2px;
+    }
+    @media (prefers-reduced-motion:reduce){
+      *{transition:none !important}
+    }
   </style>
 </head>
 <body>
 <header>
   <div class="hero">
-    <div class="eyebrow">raidshelf</div>
+    <p class="kicker">ff14高難易度練習アプリ・シミュレーター ／ 個人制作・非公式</p>
+    <div class="wordmark">raidshelf</div>
     <h1>レイド用メモ・練習ページ</h1>
     <p>絶で床をなめながら作っている、個人制作・非公式の練習ページ置き場です。</p>
     <div class="notice">
@@ -188,7 +242,6 @@
 </header>
 
 <main>
-  <h2 class="section-title">公開中</h2>
   <div class="filters" aria-label="ページ検索">
     <div class="search-row">
       <input id="pageSearch" class="search-input" type="search" placeholder="タグ・名前で検索" autocomplete="off">
@@ -197,248 +250,265 @@
     <div id="filterTags" class="filter-tags" aria-label="タグ"></div>
     <div id="filterStatus" class="filter-status" aria-live="polite"></div>
   </div>
-  <section class="grid">
 
-    <article class="card">
-      <h2>P5スリースターズ練習</h2>
-      <p>スリースターズの判断を、状況を確認しながら反復できる練習ページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P5</span>
-        <span class="tag">スリースターズ</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-3stars/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-3stars" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+  <section class="raid-section" data-raid="絶妖星乱舞">
+    <div class="raid-head"><span class="raid-name">絶妖星乱舞</span><span class="raid-count"></span></div>
 
+  <!-- P5 -->
+  <div class="phase-group" data-phase="P5">
+    <div class="phase-head"><span class="p">P5</span><span class="phase-count"></span></div>
+    <section class="grid">
 
-    <article class="card">
-      <h2>P5エクサ練習</h2>
-      <p>混沌の終末のエクサを、速度や状況を見ながら反復できる練習ページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P5</span>
-        <span class="tag">エクサ</span>
-        <span class="tag">混沌の終末</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-exa-dancingmad/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-exa-dancingmad" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P5スリースターズ練習 <span class="badge-new">NEW</span></h2>
+        <p>スリースターズの判断を、状況を確認しながら反復できる練習ページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P5</span>
+          <span class="tag">スリースターズ</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-3stars/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-3stars" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P5エクサ練習</h2>
+        <p>混沌の終末のエクサを、速度や状況を見ながら反復できる練習ページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P5</span>
+          <span class="tag">エクサ</span>
+          <span class="tag">混沌の終末</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-exa-dancingmad/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-exa-dancingmad" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
-    <article class="card">
-      <h2>P5フラッド練習</h2>
-      <p>フラッドの処理判断を、位置確認しながら反復できる練習ページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P5</span>
-        <span class="tag">フラッド</span>
-        <span class="tag">位置確認</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-flood/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-flood" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P5フラッド練習</h2>
+        <p>フラッドの処理判断を、位置確認しながら反復できる練習ページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P5</span>
+          <span class="tag">フラッド</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-flood/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-flood" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+    </section>
+  </div>
 
+  <!-- P4 -->
+  <div class="phase-group" data-phase="P4">
+    <div class="phase-head"><span class="p">P4</span><span class="phase-count"></span></div>
+    <section class="grid">
 
-    <article class="card">
-      <h2>P4グランドクロスカンペ</h2>
-      <p>グランドクロスの真偽・早遅・視線・加速度・ほのお/つなみ・マジックチャージを入力して、行動を即表示するカンペページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P4</span>
-        <span class="tag">グランドクロス</span>
-        <span class="tag">真偽</span>
-        <span class="tag">カンペ</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/support-GC/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/support-GC" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P4グランドクロスカンペ</h2>
+        <p>グランドクロスの真偽・早遅・視線・加速度・ほのお/つなみ・マジックチャージを入力して、行動を即表示するカンペページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P4</span>
+          <span class="tag">グランドクロス</span>
+          <span class="tag">真偽</span>
+          <span class="tag">カンペ</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/support-GC/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/support-GC" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P4グランドクロスカンペ オーバーレイ <span class="badge-new">NEW</span></h2>
+        <p>グランドクロス用カンペを、デスクトップ上に小さく重ねて表示するElectron版です。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P4</span>
+          <span class="tag">グランドクロス</span>
+          <span class="tag">カンペ</span>
+          <span class="tag">オーバーレイ</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://github.com/pilsnerdrinker/support-GC-overlay/releases/latest" target="_blank" rel="noopener">ダウンロード</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/support-GC-overlay" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P4グランドクロス練習</h2>
+        <p>グランドクロスの判断を、ギミック理解・位置確認・実戦練習で反復できる練習ページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P4</span>
+          <span class="tag">グランドクロス</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-GC/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-GC" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P4無の氾濫 単体 <span class="badge-new">NEW</span></h2>
+        <p>無の氾濫を単体で、位置確認・実戦練習として反復できる練習ページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P4</span>
+          <span class="tag">無の氾濫</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-floodnaught/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-floodnaught" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
-    <article class="card">
-      <h2>P4グランドクロスカンペ オーバーレイ</h2>
-      <p>グランドクロス用カンペを、デスクトップ上に小さく重ねて表示するElectron版です。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P4</span>
-        <span class="tag">グランドクロス</span>
-        <span class="tag">カンペ</span>
-        <span class="tag">オーバーレイ</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://github.com/pilsnerdrinker/support-GC-overlay/releases/latest" target="_blank" rel="noopener">ダウンロード</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/support-GC-overlay" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+    </section>
+  </div>
 
+  <!-- P3 -->
+  <div class="phase-group" data-phase="P3">
+    <div class="phase-head"><span class="p">P3</span><span class="phase-count"></span></div>
+    <section class="grid">
 
-    <article class="card">
-      <h2>P4グランドクロス練習</h2>
-      <p>グランドクロスの判断を、ギミック理解・位置確認・実戦練習で反復できる練習ページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P4</span>
-        <span class="tag">グランドクロス</span>
-        <span class="tag">位置確認</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-GC/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-GC" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P3 バウル・オブ・アゴニー練習</h2>
+        <p>Poikos式・ヤーンDN式・ヤーンTLB式に対応。ノーマルは選択肢から選ぶだけ、ハードは立ち位置選択で練習できます。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P3</span>
+          <span class="tag">P3前半</span>
+          <span class="tag">バウル・オブ・アゴニー</span>
+          <span class="tag">Poikos式</span>
+          <span class="tag">ヤーンDN式</span>
+          <span class="tag">ヤーンTLB式</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-baul/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-baul" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P3アルテマブラスター練習</h2>
+        <p>ボスの突進順から、サイコロの散開位置を判断する練習ページです。ギミック理解・位置確認・実戦練習に対応しています。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P3</span>
+          <span class="tag">P3前半</span>
+          <span class="tag">アルテマブラスター</span>
+          <span class="tag">サイコロ</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-blaster/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-blaster" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
-    <article class="card">
-      <h2>P4無の氾濫 単体</h2>
-      <p>無の氾濫を単体で、位置確認・実戦練習として反復できる練習ページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P4</span>
-        <span class="tag">無の氾濫</span>
-        <span class="tag">位置確認</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-floodnaught/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-floodnaught" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P3 バウルブラスター通し練習</h2>
+        <p>バウル・オブ・アゴニーからアルテマブラスターまで、判断を切り替えながら通しで練習するページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P3</span>
+          <span class="tag">バウル・オブ・アゴニー</span>
+          <span class="tag">アルテマブラスター</span>
+          <span class="tag">通し練習</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-baul-blaster/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-baul-blaster" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P3後半 ブラックホール練習</h2>
+        <p>ブラックホール出現位置とビーム、後続のホワイトホール・地団駄・タケノコまでを確認しながら練習するページです。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P3</span>
+          <span class="tag">P3後半</span>
+          <span class="tag">ブラックホール</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-blackhole/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-blackhole" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+    </section>
+  </div>
 
-    <article class="card">
-      <h2>P3 バウルブラスター通し練習</h2>
-      <p>バウル・オブ・アゴニーからアルテマブラスターまで、判断を切り替えながら通しで練習するページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P3</span>
-        <span class="tag">バウル・オブ・アゴニー</span>
-        <span class="tag">アルテマブラスター</span>
-        <span class="tag">通し練習</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-baul-blaster/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-baul-blaster" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+  <!-- P2 -->
+  <div class="phase-group" data-phase="P2">
+    <div class="phase-head"><span class="p">P2</span><span class="phase-count"></span></div>
+    <section class="grid">
 
+      <article class="card">
+        <h2>P2 ミッシング練習</h2>
+        <p>ヤーン式・KT式（りーん様）両対応。ノーマルは選択肢から選ぶだけ、ハードは立ち位置選択で練習できます。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P2</span>
+          <span class="tag">ミッシング</span>
+          <span class="tag">ヤーン式</span>
+          <span class="tag">KT式</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-missing/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-missing" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
-    <article class="card">
-      <h2>P3後半 ブラックホール練習</h2>
-      <p>ブラックホール出現位置とビーム、後続のホワイトホール・地団駄・タケノコまでを確認しながら練習するページです。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P3</span>
-        <span class="tag">P3後半</span>
-        <span class="tag">ブラックホール</span>
-        <span class="tag">ビーム</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-blackhole/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-blackhole" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+    </section>
+  </div>
 
+  <!-- P1 -->
+  <div class="phase-group" data-phase="P1">
+    <div class="phase-head"><span class="p">P1</span><span class="phase-count"></span></div>
+    <section class="grid">
 
-    <article class="card">
-      <h2>P3アルテマブラスター練習</h2>
-      <p>ボスの突進順から、サイコロの散開位置を判断する練習ページです。ギミック理解・位置確認・実戦練習に対応しています。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P3</span>
-        <span class="tag">P3前半</span>
-        <span class="tag">アルテマブラスター</span>
-        <span class="tag">サイコロ</span>
-        <span class="tag">実戦練習</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-blaster/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-blaster" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+      <article class="card">
+        <h2>P1 なぞなぞマジック練習</h2>
+        <p>真偽AoE判断の練習用。Round1〜3、ノーマル/ハード対応。正解表示で確認しながら反復練習できます。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P1</span>
+          <span class="tag">真偽AoE</span>
+          <span class="tag">なぞなぞマジック</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-nazomagic/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-nazomagic" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
+      <article class="card">
+        <h2>P1 ずびずばテレポ練習</h2>
+        <p>フィリピン箱式の番号＋矢印暗記用。箱配置を見て、クリックで反復練習できます。</p>
+        <div class="tags">
+          <span class="tag">絶妖星乱舞</span>
+          <span class="tag">P1</span>
+          <span class="tag">ずびずばテレポ</span>
+          <span class="tag">フィリピン箱式</span>
+        </div>
+        <div class="buttons">
+          <a class="button" href="https://pilsnerdrinker.github.io/practice-telepo/" target="_blank" rel="noopener">開く</a>
+          <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-telepo" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
 
-    <article class="card">
-      <h2>P3 バウル・オブ・アゴニー練習</h2>
-      <p>Poikos式・ヤーンDN式・ヤーンTLB式に対応。ノーマルは選択肢から選ぶだけ、ハードは立ち位置選択で練習できます。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P3</span>
-        <span class="tag">P3前半</span>
-        <span class="tag">バウル・オブ・アゴニー</span>
-        <span class="tag">Poikos式</span>
-        <span class="tag">ヤーンDN式</span>
-        <span class="tag">ヤーンTLB式</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-baul/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-baul" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>P1 なぞなぞマジック練習</h2>
-      <p>真偽AoE判断の練習用。Round1〜3、ノーマル/ハード対応。正解表示で確認しながら反復練習できます。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P1</span>
-        <span class="tag">真偽AoE</span>
-        <span class="tag">なぞなぞマジック</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-nazomagic/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-nazomagic" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>P2 ミッシング練習</h2>
-      <p>ヤーン式・KT式（りーん様）両対応。ノーマルは選択肢から選ぶだけ、ハードは立ち位置選択で練習できます。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P2</span>
-        <span class="tag">ミッシング</span>
-        <span class="tag">ヤーン式</span>
-        <span class="tag">KT式</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-missing/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-missing" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>P1 ずびずばテレポ練習</h2>
-      <p>フィリピン箱式の番号＋矢印暗記用。箱配置を見て、クリックで反復練習できます。</p>
-      <div class="tags">
-        <span class="tag">絶妖星乱舞</span>
-        <span class="tag">P1</span>
-        <span class="tag">ずびずばテレポ</span>
-        <span class="tag">フィリピン箱式</span>
-      </div>
-      <div class="buttons">
-        <a class="button" href="https://pilsnerdrinker.github.io/practice-telepo/" target="_blank" rel="noopener">開く</a>
-        <a class="button secondary" href="https://github.com/pilsnerdrinker/practice-telepo" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
+    </section>
+  </div>
   </section>
+
   <p id="emptyResult" class="empty-result">該当するページがありません。</p>
 
   <h2 class="section-title">メモ</h2>
@@ -446,19 +516,14 @@
   <p>処理法やマクロが違う場合は、各固定・募集のものを優先してください。</p>
   <p>判定違いなどに気づいた場合は、Xの該当投稿に返信いただければ、気づいた範囲で確認します。</p>
 
-  <h2 class="section-title">更新メモ</h2>
+  <h2 class="section-title">最近の更新</h2>
   <ul>
-    <li>ヘッダーの文字サイズと公開中までの余白を調整しました。</li>
-    <li>P5スリースターズ練習を追加しました。</li>
-    <li>P4グランドクロスカンペ オーバーレイを追加しました。</li>
-    <li>P4無の氾濫 単体を追加しました。</li>
-    <li>タグ・名前で検索できる絞り込み機能を追加しました。</li>
-    <li>P5エクサ練習を追加しました。</li>
-    <li>P5フラッド練習を追加しました。</li>
-    <li>P4グランドクロス練習を追加しました。</li>
-    <li>処理法やマクロの違いに気づいたら、気づいた範囲で修正します。</li>
-    <li>ページを追加したらここに増やします。</li>
-    <li>修正内容は、必要に応じてXの投稿ツリーにも追記します。</li>
+    <li>2026-07-10 ロゴをOutfit 900に変更しました。</li>
+    <li>2026-07-10 ページをフェーズ（P5〜P1）ごとに並べ替えました。</li>
+    <li>2026-07-10 最近追加したページに NEW を表示するようにしました。</li>
+    <li>2026-07-10 P5スリースターズ練習を追加しました。</li>
+    <li>2026-07-10 P4グランドクロスカンペ オーバーレイを追加しました。</li>
+
   </ul>
 </main>
 
@@ -480,6 +545,8 @@
       const filterStatus = document.getElementById('filterStatus');
       const emptyResult = document.getElementById('emptyResult');
       const cards = Array.from(document.querySelectorAll('.card'));
+      const phaseGroups = Array.from(document.querySelectorAll('.phase-group'));
+      const raidSections = Array.from(document.querySelectorAll('.raid-section'));
       const selectedTags = new Set();
 
       const normalize = value => value.toLowerCase().replace(/\s+/g, '');
@@ -523,6 +590,24 @@
           const isVisible = matchesQuery && matchesTags;
           card.hidden = !isVisible;
           if (isVisible) visibleCount += 1;
+        });
+
+        // フェーズごとの件数表示＋空グループの非表示
+        phaseGroups.forEach(group => {
+          const groupCards = Array.from(group.querySelectorAll('.card'));
+          const shown = groupCards.filter(card => !card.hidden).length;
+          const countEl = group.querySelector('.phase-count');
+          if (countEl) countEl.textContent = shown ? `${shown}件` : '';
+          group.hidden = shown === 0;
+        });
+
+        // 大カテゴリごとの件数表示＋空セクションの非表示
+        raidSections.forEach(section => {
+          const sectionCards = Array.from(section.querySelectorAll('.card'));
+          const shown = sectionCards.filter(card => !card.hidden).length;
+          const countEl = section.querySelector('.raid-count');
+          if (countEl) countEl.textContent = shown ? `${shown}件` : '';
+          section.hidden = shown === 0;
         });
 
         const parts = [];
